@@ -9,7 +9,7 @@ import os
 def send_email(subject, body):
     # Email configuration
     sender_email = os.getenv("EMAIL")
-    sender_password = os.getenv("EMAIL_PASSWORD")
+    sender_password = os.getenv("APP_PASSWORD")
     receiver_email = os.getenv("EMAIL")
     print("el sender es", sender_email)
     # Create message
