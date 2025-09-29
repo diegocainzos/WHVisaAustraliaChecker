@@ -5,12 +5,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 ### EMAIL
+
 def send_email(subject, body):
     # Email configuration
     sender_email = os.getenv("EMAIL")
     sender_password = os.getenv("EMAIL_PASSWORD")
     receiver_email = os.getenv("EMAIL")
-    
+    print(sender_email)
     # Create message
     message = MIMEMultipart()
     message["From"] = sender_email
