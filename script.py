@@ -51,6 +51,8 @@ status = spain_td.next_sibling.text
 
 if "paused" not in status:
     print("ya no esta pausado")
+    send_email("VISA AUSTRALIA ABIERTA", "Spain WHM Available!")
+
 else:
     print("sigue pausado")
     send_email("sigue pausado nano", "Spain WHM Not Available!")
