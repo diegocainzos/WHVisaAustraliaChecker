@@ -37,7 +37,7 @@ jobs:
     environment: secrets
 
     env:
-      EMAIL_PASSWORD: ${{ secrets.APP_PASSWORD }}
+      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
       EMAIL: ${{ secrets.EMAIL }}
 
     steps:
