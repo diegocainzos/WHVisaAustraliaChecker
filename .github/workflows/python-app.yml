@@ -1,16 +1,15 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# This workflow runs your Python script using a single version of Python.
+# It is triggered on push/PR to main, manually, and on a 6-hour schedule.
 
-name: Python application
+name: Python Script Runner
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
   schedule:
-    # Cada 6 horas
+    # Runs every 6 hours
     - cron: "0 */6 * * *"
   workflow_dispatch:
 
@@ -18,21 +17,25 @@ permissions:
   contents: read
 
 jobs:
+  # --- Debug Job (Optional, but kept for safety check) ---
+  # This job ensures your secrets are correctly loaded into the environment.
   debug-secrets:
     runs-on: ubuntu-latest
-    environment: secrets
+    # Use the environment to ensure secrets are available
+    environment: secrets 
     env:
       EMAIL: ${{ secrets.EMAIL }}
       APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
     steps:
-      - name: Debug vars (safe)
+      - name: Verify Secrets Loading
         run: |
           echo "EMAIL set? $([ -z \"$EMAIL\" ] && echo no || echo yes)"
           echo "APP_PASSWORD set? $([ -z \"$APP_PASSWORD\" ] && echo no || echo yes)"
-          echo "EMAIL length: ${#EMAIL}"
-          echo "APP_PASSWORD length: ${#APP_PASSWORD}"
-  build:
+          # Note: We avoid printing the actual values or lengths for security.
 
+  # --- Main Build and Run Job ---
+  run-script:
+    # Renamed 'build' to 'run-script' for clarity
     runs-on: ubuntu-latest
     environment: secrets
 
@@ -41,16 +44,29 @@ jobs:
       EMAIL: ${{ secrets.EMAIL }}
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+    - name: Checkout code
+      # Use the latest stable version
+      uses: actions/checkout@v4 
+
+    - name: Set up Python
+      # Use the latest stable version (v4)
+      uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        # Specify the exact version you need
+        python-version: '3.10' 
+        # Caching dependencies is highly recommended for speed
+        cache: 'pip' 
+
     - name: Install dependencies
+      # Simplified installation step. setup-python@v4 handles pip upgrade automatically.
+      # It also correctly handles the requirements.txt file if it exists.
       run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Run the script
+        if [ -f requirements.txt ]; then 
+          pip install -r requirements.txt
+        else
+          echo "No requirements.txt found. Skipping dependency installation."
+        fi
+
+    - name: Execute the Python script
       run: |
         python script.py
-
