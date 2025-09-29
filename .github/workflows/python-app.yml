@@ -20,6 +20,7 @@ permissions:
 jobs:
   debug-secrets:
     runs-on: ubuntu-latest
+    environment: secrets
     env:
       EMAIL: ${{ secrets.EMAIL }}
       APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
@@ -33,6 +34,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    environment: secrets
 
     env:
       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
