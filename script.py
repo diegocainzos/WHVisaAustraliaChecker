@@ -3,13 +3,13 @@ import requests
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+import os
 ### EMAIL
 def send_email(subject, body):
     # Email configuration
-    sender_email = "digarca02@gmail.com"
-    sender_password = "syrz icyp ztpo putv" 
-    receiver_email = "digarca02@gmail.com"
+    sender_email = os.getenv("EMAIL")
+    sender_password = os.getenv("EMAIL_PASSWORD")
+    receiver_email = os.getenv("EMAIL")
     
     # Create message
     message = MIMEMultipart()
