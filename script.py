@@ -5,31 +5,41 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 ### EMAIL
-
 def send_email(subject, body):
-    # Email configuration
     sender_email = os.getenv("EMAIL")
     sender_password = os.getenv("APP_PASSWORD")
-    receiver_email = os.getenv("EMAIL")
-    print("el sender es", sender_email)
-    # Create message
+    receiver_email = os.getenv("EMAIL")  # si el receptor es distinto, usa otra var
+
+    # Comprobaciones explícitas y seguras (no mostramos secretos)
+    if not sender_email:
+        raise RuntimeError("Env var EMAIL no encontrada o vacía.")
+    if not sender_password:
+        raise RuntimeError("Env var APP_PASSWORD no encontrada o vacía.")
+
+    print("EMAIL presente:", bool(sender_email))
+    print("APP_PASSWORD presente:", bool(sender_password))
+    print("EMAIL length:", len(sender_email))
+    print("APP_PASSWORD length:", len(sender_password))
+
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = receiver_email
     message["Subject"] = subject
-    
     message.attach(MIMEText(body, "plain"))
-    
-    # Send email
+
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.ehlo()
         server.starttls()
-        server.login(sender_email, sender_password)
+        server.ehlo()
+        server.login(sender_email, sender_password)  # aquí falla si password es None
         server.sendmail(sender_email, receiver_email, message.as_string())
         server.quit()
         print("Email sent successfully!")
     except Exception as e:
-        print(f"Error: {e}")
+        print("Error al enviar email:", e)
+        raise
+
 
 
 

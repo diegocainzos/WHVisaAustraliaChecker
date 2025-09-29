@@ -18,6 +18,18 @@ permissions:
   contents: read
 
 jobs:
+  debug-secrets:
+    runs-on: ubuntu-latest
+    env:
+      EMAIL: ${{ secrets.EMAIL }}
+      APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+    steps:
+      - name: Debug vars (safe)
+        run: |
+          echo "EMAIL set? $([ -z \"$EMAIL\" ] && echo no || echo yes)"
+          echo "APP_PASSWORD set? $([ -z \"$APP_PASSWORD\" ] && echo no || echo yes)"
+          echo "EMAIL length: ${#EMAIL}"
+          echo "APP_PASSWORD length: ${#APP_PASSWORD}"
   build:
 
     runs-on: ubuntu-latest
