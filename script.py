@@ -11,7 +11,7 @@ def send_email(subject, body):
     sender_email = os.getenv("EMAIL")
     sender_password = os.getenv("EMAIL_PASSWORD")
     receiver_email = os.getenv("EMAIL")
-    print(sender_email)
+    print("el sender es", sender_email)
     # Create message
     message = MIMEMultipart()
     message["From"] = sender_email
